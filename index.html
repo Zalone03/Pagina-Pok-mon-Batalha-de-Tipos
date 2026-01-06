@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@700;900&display=swap" rel="stylesheet">
+    <title>Pokémon Batalha de Tipos</title>
+</head>
+<body>
+    <div id="game-over-overlay">
+        <h2 id="game-over-message">VITÓRIA!</h2>
+        <button id="restart-btn-overlay" onclick="restartGame()">REINICIAR</button>
+    </div>
+
+    <div class="side-menu">
+        <button onclick="toggleModal('modal-tabela')">📊</button>
+        <button onclick="toggleModal('modal-hall')">🏆</button>
+        <button onclick="toggleReveal()" id="btn-reveal">👁️</button>
+        <button onclick="toggleModal('modal-tutorial')">❓</button>
+    </div>
+
+    <div id="modal-tabela" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleModal('modal-tabela')">&times;</span>
+            <h2>Tabela de Tipos</h2>
+            <img src="./vantagens.jpg" alt="Tabela de Tipos" style="width:100%; border-radius: 10px; margin-top: 10px;">
+        </div>
+    </div>
+
+    <div id="modal-tutorial" class="modal">
+    <div class="modal-content" style="text-align: left; max-height: 80vh; overflow-y: auto;">
+        <span class="close" onclick="toggleModal('modal-tutorial')">&times;</span>
+        <h2 style="text-align: center; margin-bottom: 15px;">🎮 Como Jogar</h2>
+        
+        <p><strong>Objetivo:</strong> Reduza o HP do rival a 0 usando as vantagens de tipo.</p>
+        
+        <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 5px;">🔥 <strong>Vantagem:</strong> Causa 20 de dano ao rival.</li>
+            <li style="margin-bottom: 5px;">🛡️ <strong>Desvantagem:</strong> Você recebe 20 de dano.</li>
+            <li style="margin-bottom: 5px;">⚔️ <strong>Neutro/Empate:</strong> Ambos recebem 10 de dano.</li>
+            <li style="margin-bottom: 5px;">☀️<strong>Imune:</strong> Apenas um recebe 10 de dano.</li>
+            <li style="margin-bottom: 5px;">✨ <strong>Combo de Cura:</strong> Acerte 2 vantagens seguidas e ganhe +15 de HP!</li>
+        </ul>
+
+        <hr style="margin: 15px 0;">
+        
+        <h3>🏆 Modos de Jogo:</h3>
+        <p>• <strong>Padrão:</strong> Escolha 1 tipo por vez.</p>
+        <p>• <strong>Campeão:</strong> Melhor de 3 rounds. Rival mais inteligente. Você deve escolher <strong>2 tipos</strong> por turno.</p>
+
+        <hr style="margin: 15px 0;">
+
+        <h3>👁️ (Previsão):</h3>
+        <p>Ao ativar o olho, você verá qual será a jogada do rival antes de escolher a sua. Use isso para treinar!</p>
+    </div>
+</div>
+
+    <div id="modal-hall" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleModal('modal-hall')">&times;</span>
+            <h2 style="font-family: 'Kanit', sans-serif;">🏆 RESUMO DE CARREIRA</h2>
+            <div class="winrate-container">
+                <div class="winrate-label">Taxa de Vitória: <span id="wr-percent">0%</span></div>
+                <div class="winrate-bar-bg"><div id="wr-fill" class="winrate-bar-fill"></div></div>
+                <div class="winrate-stats">
+                    <span>V: <span id="v-count">0</span></span>
+                    <span>D: <span id="d-count">0</span></span>
+                </div>
+            </div>
+            <div class="favorites-section">
+                <div class="fav-card"><small>Seu Favorito</small><div id="user-fav" class="fav-type">???</div></div>
+                <div class="fav-card"><small>Favorito do Rival</small><div id="mach-fav" class="fav-type">???</div></div>
+            </div>
+            <div class="comparison-chart">
+                <div class="chart-item">
+                    <span class="chart-label">Dano (Você vs Rival)</span>
+                    <div class="bar-container">
+                        <div id="bar-dmg-u" class="bar-user"></div>
+                        <div id="bar-dmg-m" class="bar-mach"></div>
+                    </div>
+                    <div class="chart-values"><span id="val-dmg-u">0</span><span id="val-dmg-m">0</span></div>
+                </div>
+            </div>
+            <button onclick="resetStats()" class="reset-btn">Zerar Histórico</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div style="text-align: center; width: 100%; margin-bottom: 15px;">
+            <button id="mode-toggle" onclick="toggleGameMode()">
+                MODO: PADRÃO
+            </button>
+        <div id="champion-rounds" style="display: none; text-align: center; width: 100%; font-weight: bold; margin-top: 10px;">
+            ROUNDS: <span id="u-rounds">0</span> - <span id="m-rounds">0</span>
+        </div>
+        </div>
+
+        <h1>Escolha seu Tipo:</h1>
+
+        <div class="hp-container">
+            <div class="hp-bar-wrapper">
+                <label>Seu HP</label>
+                <div class="hp-bg"><div id="user-hp-fill" class="hp-fill"></div></div>
+                <div id="user-heal-text" class="heal-text">+15</div>
+            </div>
+        <div class="hp-bar-wrapper">
+            <label>Rival HP</label>
+            <div class="hp-bg"><div id="machine-hp-fill" class="hp-fill"></div></div>
+            <div id="machine-heal-text" class="heal-text">+15</div>
+            
+            <div id="prediction-container" style="display: none; margin-top: 10px; width: 100%;">
+                <small style="display: block; font-size: 10px; color: #aaa; text-align: center; margin-bottom: 5px;">PREVISÃO DO RIVAL:</small>
+                <div class="prediction-wrapper">
+                    <div id="prediction-slot" class="display-box">?</div>
+                    <div id="prediction-slot-2" class="display-box">?</div>
+                </div>
+            </div>
+
+        </div>
+        </div>
+
+        <div class="type-buttons">
+            <button class="bug" onclick="playUser('bug', this)">Bug</button>
+            <button class="dark" onclick="playUser('dark', this)">Dark</button>
+            <button class="dragon" onclick="playUser('dragon', this)">Dragon</button>
+            <button class="electric" onclick="playUser('electric', this)">Electric</button>
+            <button class="fairy" onclick="playUser('fairy', this)">Fairy</button>
+            <button class="fighting" onclick="playUser('fighting', this)">Fighting</button>
+            <button class="fire" onclick="playUser('fire', this)">Fire</button>
+            <button class="flying" onclick="playUser('flying', this)">Flying</button>
+            <button class="ghost" onclick="playUser('ghost', this)">Ghost</button>
+            <button class="grass" onclick="playUser('grass', this)">Grass</button>
+            <button class="ground" onclick="playUser('ground', this)">Ground</button>
+            <button class="ice" onclick="playUser('ice', this)">Ice</button>
+            <button class="normal" onclick="playUser('normal', this)">Normal</button>
+            <button class="poison" onclick="playUser('poison', this)">Poison</button>
+            <button class="psychic" onclick="playUser('psychic', this)">Psychic</button>
+            <button class="rock" onclick="playUser('rock', this)">Rock</button>
+            <button class="steel" onclick="playUser('steel', this)">Steel</button>
+            <button class="water" onclick="playUser('water', this)">Water</button>
+        </div>
+
+            <div class="battle-area">
+                <div style="display: flex; gap: 5px;">
+                    <div id="user-display" class="display-box">Aguardando...</div>
+                    <div id="user-display-2" class="display-box" style="display:none;">Aguardando...</div>
+                </div>
+                
+                <span class="vs">VS</span>
+                
+                <div style="display: flex; gap: 5px;">
+                    <div id="machine-display" class="display-box">Rival</div>
+                    <div id="machine-display-2" class="display-box" style="display:none;">Rival</div>
+                </div>
+            </div>
+
+        <div class="scoreboard">
+            <p><span class="result">Faça Sua Escolha</span></p>
+            <button id="restart-btn" onclick="restartGame()" style="display: none;">Reiniciar</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
