@@ -3,8 +3,6 @@
 Um jogo interativo de batalha de tipos Pokémon, desenvolvido em HTML, CSS e JavaScript. Desafie-se em um duelo estratégico, explore as vantagens e desvantagens dos tipos e teste suas habilidades no Modo Campeão!
 https://zalone03.github.io/Pagina-Pok-mon-Batalha-de-Tipos/
 
-<img width="1207" height="819" alt="image" src="https://github.com/user-attachments/assets/cf37e72b-1142-43b1-a7b3-f9b0d5c9d6d9" />
-
 
 ## ✨ Funcionalidades
 
