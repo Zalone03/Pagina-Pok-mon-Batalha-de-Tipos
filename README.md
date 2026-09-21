@@ -36,6 +36,15 @@ Reduza o HP do rival a 0 usando as vantagens de tipo.
 * ❓ **Tutorial:** Relembre as regras e mecânicas do jogo.
 * 👁️ **Olho (Previsão):** Ative para ver a próxima jogada do rival.
 
+
+## Como executar
+
+```bash
+git clone https://github.com/Zalone03/Pagina-Pok-mon-Batalha-de-Tipos.git
+```
+
+Abra o `index.html` no navegador. Não precisa instalar nada.
+
 ## 🌐 Tecnologias Utilizadas
 
 * **HTML5:** Estrutura da página.
